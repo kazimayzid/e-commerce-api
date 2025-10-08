@@ -1,6 +1,7 @@
 const emailValidation = require("../helpers/emailValidation");
 const userSchema = require("../model/userSchema");
 const bcrypt = require('bcrypt');
+var jwt = require('jsonwebtoken');
 async function logInController(req, res) {
    const {email, password} = req.body
   
@@ -38,9 +39,23 @@ async function logInController(req, res) {
       message: "password is not matched",
     });
    }
+
+  const accessToken = jwt.sign({
+    userid: existingUser._id,
+    firstName: existingUser.firstName,
+    email: existingUser.email,
+    role: existingUser.role
+  },
+  "ecommerceapi",
+  {
+    expiresIn: "10m"
+  }
+ )
+
    res.status(200).json({
     success: true,
-    message: " log in successfull"
+    message: " log in successfull",
+    access: accessToken
    })
 }
 module.exports = logInController
