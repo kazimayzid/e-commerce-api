@@ -43,7 +43,7 @@ async function createCategoryController(req, res) {
 
 async function getCategoryController(req, res) {
   try {
-    const categoryData = await categorySchema.findOne();
+    const categoryData = await categorySchema.findOne().populate("subCategory");
 
     return res.status(200).json({
       success: false,
