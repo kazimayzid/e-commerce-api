@@ -91,38 +91,60 @@ async function getSingleSubCategoryController(req, res) {
 async function updateSubCategoryController(req, res) {
   try {
     const { id } = req.params;
-    const { name, description } = req.body;
+    const { name, description, category } = req.body;
 
     if (!name) {
       return res.status(400).json({
         success: false,
-        messege: "plz give a name"
-      })
+        messege: "plz give a name",
+      });
     }
 
     if (!description) {
       return res.status(400).json({
         success: false,
-        messege: "plz give a description"
-      })
+        messege: "plz give a description",
+      });
     }
 
     const updatedData = await subCatagorySchema.findByIdAndUpdate(
       id,
       {
-        $set:{name, description}
+        $set: { name, description },
       },
       {
-        new: true
+        new: true,
       }
-    )
+    );
 
+    let updatedCategory = null;
+    if (category) {
+      await categorySchema.updateMany(
+        { subCategory: id },
+        { $pull: { subCategory: id } }
+      );
+
+      updatedCategory = await categorySchema.findByIdAndUpdate(
+        category,
+        {
+          $addToSet: { subCategory: updatedData._id },
+        },
+        {
+          new: true,
+        }
+      );
+    }
 
     res.status(200).json({
       success: true,
-      messege: "your subCategory is updated successfully",
-      data: updatedData
-    })
+      messege: category
+        ? "Subcategory and category updated successfully."
+        : "Subcategory updated successfully.",
+      data: {
+        subCategory: updatedData,
+        category: updatedCategory,
+      },
+    });
   } catch (error) {
     return res.status(501).json({
       success: false,
@@ -133,22 +155,22 @@ async function updateSubCategoryController(req, res) {
 }
 
 async function deleteSubCategoryController(req, res) {
- try {
-   const {id} = req.params;
-  const deleteData = await subCatagorySchema.findByIdAndDelete(id);
+  try {
+    const { id } = req.params;
+    const deleteData = await subCatagorySchema.findByIdAndDelete(id);
 
-  res.status(200).json({
-    success: true,
-    messege: "subcategory is deleted successfully",
-    data: deleteData
-  })
- } catch (error) {
-   return res.status(501).json({
+    res.status(200).json({
+      success: true,
+      messege: "subcategory is deleted successfully",
+      data: deleteData,
+    });
+  } catch (error) {
+    return res.status(501).json({
       success: false,
       messege: "something is wrong in server",
       error: error,
     });
- }
+  }
 }
 
 module.exports = {
@@ -156,5 +178,5 @@ module.exports = {
   getAllSubCategory,
   getSingleSubCategoryController,
   updateSubCategoryController,
-  deleteSubCategoryController
+  deleteSubCategoryController,
 };
