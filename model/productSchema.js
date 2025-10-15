@@ -45,6 +45,11 @@ const productSchema = new Schema ({
     },
     sold: {
         type: Number
+    },
+    subCategory: {
+      required: true,
+      type: Schema.Types.ObjectId,
+      ref: "subCatagoriesList"
     }
   },
 )
