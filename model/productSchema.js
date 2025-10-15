@@ -25,12 +25,9 @@ const productSchema = new Schema ({
       min: [0, "Stock cannot be negative"],
     },
 
-    images: [
-      {
-        url: { type: String, required: true },
-        public_id: { type: String },
-      },
-    ],
+    image: {
+      type: String
+    },
 
     rating: {
       type: Number,

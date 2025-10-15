@@ -1,3 +1,4 @@
+const uploadImg = require("../helpers/cloudinary");
 const productSchema = require("../model/productSchema");
 const subCatagorySchema = require("../model/subCatagorySchema");
 
@@ -8,12 +9,16 @@ async function createProductController(req, res) {
       description,
       price,
       stock,
-      images,
+      image,
       rating,
       discount,
       sold,
       subCategory,
     } = req.body;
+
+  const imgName = req.file.filename;
+  const imgPath = req.file.path;
+  const imgURL = await uploadImg(imgPath)
 
     if (!name) {
       return res.status(400).json({
@@ -53,7 +58,7 @@ async function createProductController(req, res) {
       description,
       price,
       stock,
-      images,
+      image: imgURL.secure_url,
       rating,
       discount,
       sold,
