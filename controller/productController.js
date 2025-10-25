@@ -16,9 +16,9 @@ async function createProductController(req, res) {
       subCategory,
     } = req.body;
 
-  const imgName = req.file.filename;
-  const imgPath = req.file.path;
-  const imgURL = await uploadImg(imgPath)
+    const imgName = req.file.filename;
+    const imgPath = req.file.path;
+    const imgURL = await uploadImg(imgPath);
 
     if (!name) {
       return res.status(400).json({
@@ -89,5 +89,21 @@ async function createProductController(req, res) {
     });
   }
 }
+async function getAllProductController(req, res) {
+  try {
+    const product = await productSchema.find()
+    res.status(200).json({
+      success: true,
+      messege: "Data of all products",
+      data: product
+    })
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      messege: "Something is wrong in server",
+      error: error,
+    });
+  }
+}
 
-module.exports = { createProductController };
+module.exports = { createProductController, getAllProductController };
