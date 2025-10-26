@@ -91,12 +91,12 @@ async function createProductController(req, res) {
 }
 async function getAllProductController(req, res) {
   try {
-    const product = await productSchema.find()
+    const product = await productSchema.find();
     res.status(200).json({
       success: true,
       messege: "Data of all products",
-      data: product
-    })
+      data: product,
+    });
   } catch (error) {
     res.status(500).json({
       success: false,
@@ -106,4 +106,115 @@ async function getAllProductController(req, res) {
   }
 }
 
-module.exports = { createProductController, getAllProductController };
+async function getSingleProductController(req, res) {
+  try {
+    const { id } = req.params;
+    const data = await productSchema.findById(id);
+
+    if (!data) {
+      return res.status(400).json({
+        success: false,
+        messege: "There is no data like this",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      messege: "This is your searching data",
+      data: data,
+    });
+  } catch (error) {
+    res.status(501).json({
+      success: false,
+      messege: "Something is wrong in server",
+      error: error,
+    });
+  }
+}
+
+async function updateProductController(req, res) {
+  try {
+    const { id } = req.params;
+    const {
+      name,
+      description,
+      price,
+      stock,
+      image,
+      rating,
+      discount,
+      subCategory,
+    } = req.body;
+
+    const imgPath = req.file.path;
+    const imgURL = await uploadImg(imgPath);
+
+    if (!name || !description || !price || !subCategory) {
+      return res.status(400).json({
+        success: false,
+        messege:
+          "Required field must be field (name, description, price, subCategory)",
+      });
+    }
+
+    const updatedData = await productSchema.findByIdAndUpdate(
+      id,
+      {
+        $set: {
+          name,
+          description,
+          price,
+          subCategory,
+          stock,
+          image: imgURL.secure_url,
+          rating,
+          discount,
+        },
+      },
+      {
+        new: true,
+      }
+    );
+
+    res.status(201).json({
+      success: true,
+      messege: "Update is successful",
+      data: updatedData,
+    });
+  } catch (error) {
+    res.status(501).json({
+      success: false,
+      messege: "something is wrong in server",
+      error: error,
+    });
+  }
+}
+
+async function deleteProductController(req, res) {
+  try {
+    const { id } = req.params;
+
+    const deletedData = await productSchema.findByIdAndDelete(id);
+
+    res.status(200).json({
+      success: true,
+      messege: "your product is deleted successfully",
+      data: deletedData
+    })
+  } catch (error) {
+
+    res.status(500).json({
+      success: false,
+      messege: "something is wrong in server",
+      error: error
+    })
+  }
+}
+
+module.exports = {
+  createProductController,
+  getAllProductController,
+  getSingleProductController,
+  updateProductController,
+  deleteProductController
+};
