@@ -23,25 +23,25 @@ async function createProductController(req, res) {
     if (!name) {
       return res.status(400).json({
         success: false,
-        messege: "Name is required",
+        message: "Name is required",
       });
     }
     if (!description) {
       return res.status(400).json({
         success: false,
-        messege: "description is required",
+        message: "description is required",
       });
     }
     if (!price) {
       return res.status(400).json({
         success: false,
-        messege: "price is required",
+        message: "price is required",
       });
     }
     if (!subCategory) {
       return res.status(400).json({
         success: false,
-        messege: "Subcategory is required",
+        message: "Subcategory is required",
       });
     }
 
@@ -49,7 +49,7 @@ async function createProductController(req, res) {
     if (alredyExistPorduct) {
       return res.status(400).json({
         success: false,
-        messege: "This product alredy exist",
+        message: "This product alredy exist",
       });
     }
 
@@ -78,13 +78,13 @@ async function createProductController(req, res) {
     );
     res.status(201).json({
       success: true,
-      messege: "product data is saved in DB successfully",
+      message: "product data is saved in DB successfully",
       data: productData,
     });
   } catch (error) {
     res.status(500).json({
       success: false,
-      messege: "Something is wrong in server",
+      message: "Something is wrong in server",
       error: error,
     });
   }
@@ -94,13 +94,13 @@ async function getAllProductController(req, res) {
     const product = await productSchema.find();
     res.status(200).json({
       success: true,
-      messege: "Data of all products",
+      message: "Data of all products",
       data: product,
     });
   } catch (error) {
     res.status(500).json({
       success: false,
-      messege: "Something is wrong in server",
+      message: "Something is wrong in server",
       error: error,
     });
   }
@@ -114,19 +114,19 @@ async function getSingleProductController(req, res) {
     if (!data) {
       return res.status(400).json({
         success: false,
-        messege: "There is no data like this",
+        message: "There is no data like this",
       });
     }
 
     res.status(200).json({
       success: true,
-      messege: "This is your searching data",
+      message: "This is your searching data",
       data: data,
     });
   } catch (error) {
     res.status(501).json({
       success: false,
-      messege: "Something is wrong in server",
+      message: "Something is wrong in server",
       error: error,
     });
   }
@@ -152,7 +152,7 @@ async function updateProductController(req, res) {
     if (!name || !description || !price || !subCategory) {
       return res.status(400).json({
         success: false,
-        messege:
+        message:
           "Required field must be field (name, description, price, subCategory)",
       });
     }
@@ -178,13 +178,13 @@ async function updateProductController(req, res) {
 
     res.status(201).json({
       success: true,
-      messege: "Update is successful",
+      message: "Update is successful",
       data: updatedData,
     });
   } catch (error) {
     res.status(501).json({
       success: false,
-      messege: "something is wrong in server",
+      message: "something is wrong in server",
       error: error,
     });
   }
@@ -198,14 +198,14 @@ async function deleteProductController(req, res) {
 
     res.status(200).json({
       success: true,
-      messege: "your product is deleted successfully",
+      message: "your product is deleted successfully",
       data: deletedData
     })
   } catch (error) {
 
     res.status(500).json({
       success: false,
-      messege: "something is wrong in server",
+      message: "something is wrong in server",
       error: error
     })
   }

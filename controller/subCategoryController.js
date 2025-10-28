@@ -10,7 +10,7 @@ async function createSubCategory(req, res) {
     if (existSubCategory) {
       return res.status(201).json({
         success: false,
-        messege: "this Subcategory alreday exist",
+        message: "this Subcategory alreday exist",
       });
     }
 
@@ -32,13 +32,13 @@ async function createSubCategory(req, res) {
     );
     return res.status(200).json({
       success: true,
-      messege: "Subcategory created successfully",
+      message: "Subcategory created successfully",
       data: data,
     });
   } catch (error) {
     return res.status(501).json({
       success: false,
-      messege: "something is wrong in server",
+      message: "something is wrong in server",
       error: error,
     });
   }
@@ -50,13 +50,13 @@ async function getAllSubCategory(req, res) {
 
     return res.status(200).json({
       success: true,
-      messege: "Data of all Subcategory",
+      message: "Data of all Subcategory",
       data: allSubCategory,
     });
   } catch (error) {
     return res.status(501).json({
       success: false,
-      messege: "something is wrong in server",
+      message: "something is wrong in server",
       error: error,
     });
   }
@@ -70,19 +70,19 @@ async function getSingleSubCategoryController(req, res) {
     if (!singleSubCategoryData) {
       return res.status(400).json({
         success: false,
-        messege: "This subCategory is not exist",
+        message: "This subCategory is not exist",
       });
     }
 
     res.status(200).json({
       success: true,
-      messege: "subCategory Data",
+      message: "subCategory Data",
       data: singleSubCategoryData,
     });
   } catch (error) {
     return res.status(501).json({
       success: false,
-      messege: "something is wrong in server",
+      message: "something is wrong in server",
       error: error,
     });
   }
@@ -96,14 +96,14 @@ async function updateSubCategoryController(req, res) {
     if (!name) {
       return res.status(400).json({
         success: false,
-        messege: "plz give a name",
+        message: "plz give a name",
       });
     }
 
     if (!description) {
       return res.status(400).json({
         success: false,
-        messege: "plz give a description",
+        message: "plz give a description",
       });
     }
 
@@ -137,7 +137,7 @@ async function updateSubCategoryController(req, res) {
 
     res.status(200).json({
       success: true,
-      messege: category
+      message: category
         ? "Subcategory and category updated successfully."
         : "Subcategory updated successfully.",
       data: {
@@ -148,7 +148,7 @@ async function updateSubCategoryController(req, res) {
   } catch (error) {
     return res.status(501).json({
       success: false,
-      messege: "something is wrong in server",
+      message: "something is wrong in server",
       error: error,
     });
   }
@@ -161,13 +161,13 @@ async function deleteSubCategoryController(req, res) {
 
     res.status(200).json({
       success: true,
-      messege: "subcategory is deleted successfully",
+      message: "subcategory is deleted successfully",
       data: deleteData,
     });
   } catch (error) {
     return res.status(501).json({
       success: false,
-      messege: "something is wrong in server",
+      message: "something is wrong in server",
       error: error,
     });
   }
