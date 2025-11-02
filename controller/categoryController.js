@@ -36,7 +36,7 @@ async function createCategoryController(req, res) {
     return res.status(501).json({
       success: false,
       messege: "something is wrong in server",
-      error: error,
+      error: error.messege.response,
     });
   }
 }
@@ -46,8 +46,8 @@ async function getCategoryController(req, res) {
     const categoryData = await categorySchema.find().populate("subCategory");
 
     return res.status(200).json({
-      success: false,
-      messege: "these are category datas",
+      success: true,
+      messege: "these are categories data",
       data: categoryData,
     });
   } catch (error) {

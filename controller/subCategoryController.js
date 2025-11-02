@@ -46,7 +46,7 @@ async function createSubCategory(req, res) {
 
 async function getAllSubCategory(req, res) {
   try {
-    const allSubCategory = await subCatagorySchema.find();
+    const allSubCategory = await subCatagorySchema.find().populate("category").populate("category", "name description -_id");
 
     return res.status(200).json({
       success: true,
@@ -110,7 +110,7 @@ async function updateSubCategoryController(req, res) {
     const updatedData = await subCatagorySchema.findByIdAndUpdate(
       id,
       {
-        $set: { name, description },
+        $set: { name, description, category },
       },
       {
         new: true,
@@ -149,7 +149,7 @@ async function updateSubCategoryController(req, res) {
     return res.status(501).json({
       success: false,
       message: "something is wrong in server",
-      error: error,
+      error: error.message,
     });
   }
 }
