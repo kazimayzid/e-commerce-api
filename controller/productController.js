@@ -89,13 +89,23 @@ async function createProductController(req, res) {
     });
   }
 }
+// Get All Product ======================================
 async function getAllProductController(req, res) {
   try {
-    const product = await productSchema.find();
+    const page = req.query.page;
+    console.log(page);
+    const size = req.query.size;
+    console.log("size:", size);
+    
+    const allPrduct = await productSchema.countDocuments({})
+    console.log(allPrduct);
+    const skipSize = (page - 1) * size
+    const product = await productSchema.find().limit(size).skip(skipSize);
     res.status(200).json({
       success: true,
       message: "Data of all products",
       data: product,
+      total: allPrduct
     });
   } catch (error) {
     res.status(500).json({
