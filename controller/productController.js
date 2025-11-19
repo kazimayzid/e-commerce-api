@@ -96,16 +96,16 @@ async function getAllProductController(req, res) {
     console.log(page);
     const size = req.query.size;
     console.log("size:", size);
-    
-    const allPrduct = await productSchema.countDocuments({})
+
+    const allPrduct = await productSchema.countDocuments({});
     console.log(allPrduct);
-    const skipSize = (page - 1) * size
+    const skipSize = (page - 1) * size;
     const product = await productSchema.find().limit(size).skip(skipSize);
     res.status(200).json({
       success: true,
       message: "Data of all products",
       data: product,
-      total: allPrduct
+      total: allPrduct,
     });
   } catch (error) {
     res.status(500).json({
@@ -145,57 +145,45 @@ async function getSingleProductController(req, res) {
 async function updateProductController(req, res) {
   try {
     const { id } = req.params;
-    const {
-      name,
-      description,
-      price,
-      stock,
-      image,
-      rating,
-      discount,
-      subCategory,
-    } = req.body;
+    const updateFields = {};
 
-    const imgPath = req.file.path;
-    const imgURL = await uploadImg(imgPath);
+    const allowedFields = [
+      "name",
+      "description",
+      "price",
+      "stock",
+      "rating",
+      "discount",
+      "subCategory",
+    ];
 
-    if (!name || !description || !price || !subCategory) {
-      return res.status(400).json({
-        success: false,
-        message:
-          "Required field must be field (name, description, price, subCategory)",
-      });
+    allowedFields.forEach((field) => {
+      if (req.body[field] !== undefined) {
+        updateFields[field] = req.body[field];
+      }
+    });
+
+    if (req.file) {
+      const imgURL = await uploadImg(req.file.path);
+      updateFields.image = imgURL.secure_url;
     }
 
     const updatedData = await productSchema.findByIdAndUpdate(
       id,
-      {
-        $set: {
-          name,
-          description,
-          price,
-          subCategory,
-          stock,
-          image: imgURL.secure_url,
-          rating,
-          discount,
-        },
-      },
-      {
-        new: true,
-      }
+      { $set: updateFields },
+      { new: true }
     );
 
-    res.status(201).json({
+    res.status(200).json({
       success: true,
       message: "Update is successful",
       data: updatedData,
     });
   } catch (error) {
-    res.status(501).json({
+    res.status(500).json({
       success: false,
-      message: "something is wrong in server",
-      error: error,
+      message: "Something went wrong on the server",
+      error: error.message,
     });
   }
 }
@@ -209,15 +197,14 @@ async function deleteProductController(req, res) {
     res.status(200).json({
       success: true,
       message: "your product is deleted successfully",
-      data: deletedData
-    })
+      data: deletedData,
+    });
   } catch (error) {
-
     res.status(500).json({
       success: false,
       message: "something is wrong in server",
-      error: error
-    })
+      error: error,
+    });
   }
 }
 
@@ -226,5 +213,5 @@ module.exports = {
   getAllProductController,
   getSingleProductController,
   updateProductController,
-  deleteProductController
+  deleteProductController,
 };
